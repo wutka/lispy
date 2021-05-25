@@ -13,26 +13,24 @@ import edu.vanderbilt.cs.wutkam.lisp.type.ListType;
  * Date: 5/24/21
  * Time: 4:34 PM
  */
-public class IfForm implements Form {
+public class IfExpander implements Form {
     @Override
     public Expression expandForm(ListExpr aList) throws LispException {
-        if (aList.elements.size() != 3) {
+        if (aList.elements.size() != 4) {
             throw new LispException("if expression must have both true and false paths");
         }
 
-        Expression testExpr = aList.elements.get(0);
+        Expression testExpr = aList.elements.get(1);
         if (testExpr instanceof ListType) {
             testExpr = FormExpander.expand((ListExpr) testExpr);
-        } else if (!(testExpr instanceof BoolExpr)) {
-            throw new LispException("if test must be a boolean expression, got "+testExpr.getClass().getName());
         }
 
-        Expression trueExpr = aList.elements.get(1);
+        Expression trueExpr = aList.elements.get(2);
         if (trueExpr instanceof ListType) {
             trueExpr = FormExpander.expand((ListExpr) trueExpr);
         }
 
-        Expression falseExpr = aList.elements.get(2);
+        Expression falseExpr = aList.elements.get(3);
         if (falseExpr instanceof ListType) {
             falseExpr = FormExpander.expand((ListExpr) trueExpr);
         }

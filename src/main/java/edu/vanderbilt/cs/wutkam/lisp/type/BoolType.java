@@ -11,6 +11,7 @@ public class BoolType extends Type {
 
     public BoolType() {}
 
+    public String toString() { return "bool"; }
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (otherObj instanceof BoolType) return true;

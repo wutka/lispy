@@ -20,7 +20,7 @@ public class DoubleExpr implements Expression {
             unifyWith.setType(DoubleType.TYPE);
             return;
         } else if (!unifyWith.type.equals(DoubleType.TYPE)){
-            throw new LispException("Unable to unify type with DoubleType");
+            throw new LispException("Unable to unify type "+unifyWith.type.toString()+" with DoubleType");
         } else {
             return;
         }

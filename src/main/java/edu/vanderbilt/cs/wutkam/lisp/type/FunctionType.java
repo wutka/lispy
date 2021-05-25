@@ -11,29 +11,48 @@ import java.util.List;
  * Time: 3:47 PM
  */
 public class FunctionType extends Type {
-    public final List<Type> elementTypes;
+    public final List<Type> argumentTypes;
+    public final Type returnType;
     public final int arity;
 
     public FunctionType(int arity) {
         this.arity = arity;
+        this.returnType = new AbstractType();
         List<Type> et = new ArrayList<>();
         for (int i=0; i < arity; i++) et.add(new AbstractType());
-        this.elementTypes = Collections.unmodifiableList(et);
+        this.argumentTypes = Collections.unmodifiableList(et);
     }
 
-    public FunctionType(int arity, List<Type> elementTypes) {
+    public FunctionType(int arity, List<Type> argumentTypes, Type returnType) {
         this.arity = arity;
-        this.elementTypes = Collections.unmodifiableList(elementTypes);
+        this.returnType = returnType;
+        this.argumentTypes = Collections.unmodifiableList(argumentTypes);
     }
 
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if (arity == 0) {
+            builder.append("()");
+        } else {
+            boolean first = true;
+            for (Type argType: argumentTypes) {
+                if (!first) builder.append(" -> ");
+                first = false;
+                builder.append(argType.toString());
+            }
+        }
+        builder.append(" -> ");
+        builder.append(returnType.toString());
+        return builder.toString();
+    }
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (!(otherObj instanceof FunctionType)) return false;
         FunctionType other = (FunctionType) otherObj;
-        return (arity == other.arity) && elementTypes.equals(other.elementTypes);
+        return (arity == other.arity) && argumentTypes.equals(other.argumentTypes);
     }
 
     public int hashCode() {
-        return 73 * arity + elementTypes.hashCode();
+        return 73 * arity + argumentTypes.hashCode();
     }
 }

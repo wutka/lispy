@@ -1,6 +1,7 @@
 package edu.vanderbilt.cs.wutkam.lisp.expr;
 
 import edu.vanderbilt.cs.wutkam.lisp.LispException;
+import edu.vanderbilt.cs.wutkam.lisp.type.AbstractType;
 import edu.vanderbilt.cs.wutkam.lisp.type.BoolType;
 import edu.vanderbilt.cs.wutkam.lisp.type.TypeRef;
 
@@ -37,15 +38,38 @@ public class IfExpr implements Expression {
     }
 
     @Override
-    public TypeRef unify(TypeRef unifyWith) throws LispException {
+    public void unify(TypeRef unifyWith) throws LispException {
         TypeRef boolRef = new TypeRef(BoolType.TYPE);
         try {
             test.unify(boolRef);
         } catch (LispException exc) {
+            throw new LispException("Cannot unify test with boolean in "+toString(), exc);
+        }
+
+        try {
+            trueOption.unify(unifyWith);
+        } catch (LispException exc) {
+            throw new LispException("Error unifying true path in "+toString(), exc);
+        }
+
+        try {
+            falseOption.unify(unifyWith);
+        } catch (LispException exc) {
+            throw new LispException("Error unifying false path with true path in "+toString(), exc);
+        }
+
+        return;
     }
 
-    @Override
-    public TypeRef unify(TypeRef unifyWith) throws LispException {
-        return null;
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(if ");
+        builder.append(test.toString());
+        builder.append(" ");
+        builder.append(trueOption.toString());
+        builder.append(" ");
+        builder.append(falseOption.toString());
+        builder.append(")");
+        return builder.toString();
     }
 }

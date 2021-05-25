@@ -2,6 +2,7 @@ package edu.vanderbilt.cs.wutkam.lisp.parser;
 
 import edu.vanderbilt.cs.wutkam.lisp.LispException;
 import edu.vanderbilt.cs.wutkam.lisp.expr.*;
+import edu.vanderbilt.cs.wutkam.lisp.forms.FormExpander;
 
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -49,10 +50,12 @@ public class Parser {
                     expressionStack.push(new ArrayList<>());
                 } else if (ch == ')') {
                     List<Expression> expr = expressionStack.pop();
+                    ListExpr listExpr = new ListExpr(expr);
+                    Expression expanded = FormExpander.expand(listExpr);
                     if (expressionStack.isEmpty()) {
-                        items.add(new ListExpr(expr));
+                        items.add(expanded);
                     } else {
-                        expressionStack.peek().add(new ListExpr(expr));
+                        expressionStack.peek().add(expanded);
                     }
                 } else if (ch == '"') {
                     StringBuilder builder = new StringBuilder();

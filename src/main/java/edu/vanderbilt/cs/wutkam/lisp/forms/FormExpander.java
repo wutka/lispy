@@ -17,6 +17,10 @@ import java.util.Map;
 public class FormExpander {
     public static Map<String,Form> specialForms = new HashMap<>();
 
+    static {
+        specialForms.put("if", new IfExpander());
+    }
+
     public static Expression expand(ListExpr aList) throws LispException
     {
         if (aList.elements.size() < 1) {
@@ -26,8 +30,8 @@ public class FormExpander {
         Expression firstElem = aList.elements.get(0);
         if (firstElem instanceof SymbolExpr) {
             SymbolExpr sym = (SymbolExpr) firstElem;
-            Form expander = specialForms.get(sym);
-            if (expander == null) {
+            Form expander = specialForms.get(sym.value);
+            if (expander != null) {
                 return expander.expandForm(aList);
             }
         }

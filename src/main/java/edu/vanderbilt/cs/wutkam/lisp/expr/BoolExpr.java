@@ -26,7 +26,7 @@ public class BoolExpr implements Expression {
             unifyWith.setType(BoolType.TYPE);
             return;
         } else if (!unifyWith.type.equals(BoolType.TYPE)){
-            throw new LispException("Unable to unify type with BoolType");
+            throw new LispException("Unable to unify type "+unifyWith.type.toString()+" with BoolType");
         } else {
             return;
         }

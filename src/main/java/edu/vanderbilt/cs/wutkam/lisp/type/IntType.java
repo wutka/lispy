@@ -11,6 +11,8 @@ public class IntType extends Type {
 
     public IntType() {}
 
+    public String toString() { return "int"; }
+
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (otherObj instanceof IntType) return true;

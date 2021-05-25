@@ -1,6 +1,7 @@
 package edu.vanderbilt.cs.wutkam.lisp.expr;
 
 import edu.vanderbilt.cs.wutkam.lisp.LispException;
+import edu.vanderbilt.cs.wutkam.lisp.type.ListType;
 import edu.vanderbilt.cs.wutkam.lisp.type.TypeRef;
 
 import java.util.ArrayList;
@@ -18,11 +19,12 @@ public class ListExpr implements Expression {
         this.elements = elements;
     }
 
-    public void unifyWith(TypeRef ref) throws LispException {
-        if (ref.type instanceof AbstractType) {
-            
+    public void unify(TypeRef ref) throws LispException {
+        if (!(ref.type instanceof ListType)) {
+            throw new LispException("Error unifying List with "+ref.type.getClass().getName());
         }
     }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -30,6 +32,7 @@ public class ListExpr implements Expression {
         boolean first = true;
         for (Expression elem: elements) {
             if (!first) builder.append(' ');
+            first = false;
             builder.append(elem.toString());
         }
         builder.append(')');

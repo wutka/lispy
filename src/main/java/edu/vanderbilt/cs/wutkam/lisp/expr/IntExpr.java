@@ -20,7 +20,7 @@ public class IntExpr implements Expression {
             unifyWith.setType(IntType.TYPE);
             return;
         } else if (!unifyWith.type.equals(IntType.TYPE)){
-            throw new LispException("Unable to unify type with IntType");
+            throw new LispException("Unable to unify type "+unifyWith.type.toString()+" with IntType");
         } else {
             return;
         }

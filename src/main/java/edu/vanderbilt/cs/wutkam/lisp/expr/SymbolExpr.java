@@ -20,7 +20,7 @@ public class SymbolExpr implements Expression {
             unifyWith.setType(SymbolType.TYPE);
             return;
         } else if (!unifyWith.type.equals(SymbolType.TYPE)){
-            throw new LispException("Unable to unify type with SymbolType");
+            throw new LispException("Unable to unify type "+unifyWith.type.toString()+" with SymbolType");
         } else {
             return;
         }

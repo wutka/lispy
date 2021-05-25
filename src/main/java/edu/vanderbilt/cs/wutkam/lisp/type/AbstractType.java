@@ -7,7 +7,22 @@ package edu.vanderbilt.cs.wutkam.lisp.type;
  * Time: 4:47 PM
  */
 public class AbstractType extends Type {
+    public final String tag;
+
+    public AbstractType() {
+        this.tag = "'a";
+    }
+
+    public AbstractType(String tag) {
+        this.tag = tag;
+    }
+
     public boolean isAbstract() {
         return true;
     }
+
+    public String toString() {
+        return tag;
+    }
+
 }

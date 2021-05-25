@@ -11,6 +11,8 @@ public class StringType extends Type {
 
     public StringType() {}
 
+    public String toString() { return "string"; }
+
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (otherObj instanceof StringType) return true;

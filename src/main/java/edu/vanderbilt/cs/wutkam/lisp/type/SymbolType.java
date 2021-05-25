@@ -11,6 +11,8 @@ public class SymbolType extends Type {
 
     public SymbolType() {}
 
+    public String toString() { return "sym"; }
+
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (otherObj instanceof SymbolType) return true;

@@ -11,6 +11,8 @@ public class DoubleType extends Type {
 
     public DoubleType() {}
 
+    public String toString() { return "double"; }
+
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (otherObj instanceof DoubleType) return true;

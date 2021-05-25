@@ -20,7 +20,7 @@ public class StringExpr implements Expression {
             unifyWith.setType(StringType.TYPE);
             return;
         } else if (!unifyWith.type.equals(StringType.TYPE)){
-            throw new LispException("Unable to unify type with StringType");
+            throw new LispException("Unable to unify type "+unifyWith.type.toString()+" with StringType");
         } else {
             return;
         }

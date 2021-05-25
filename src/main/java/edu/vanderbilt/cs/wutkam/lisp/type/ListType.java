@@ -17,6 +17,10 @@ public class ListType extends Type {
         this.elementType = elementType;
     }
 
+    public String toString() {
+        return "list "+elementType.toString();
+    }
+
     public boolean equals(Object otherObj) {
         if (otherObj == null) return false;
         if (!(otherObj instanceof ListType)) return false;
