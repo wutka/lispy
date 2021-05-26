@@ -1,4 +1,6 @@
-package edu.vanderbilt.cs.wutkam.lisp.expr;
+package edu.vanderbilt.cs.wutkam.lisp.runtime;
+
+import edu.vanderbilt.cs.wutkam.lisp.expr.Expression;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,24 +11,28 @@ import java.util.Map;
  * Date: 5/24/21
  * Time: 3:14 PM
  */
-public class Environment {
-    protected Map<String,Expression> symbols;
-    protected Environment next;
+public class Environment<T> {
+    protected Map<String, T> symbols;
+    protected Environment<T> next;
 
     public Environment() {
         symbols = new HashMap<>();
         next = null;
     }
 
-    public Environment(Environment next) {
+    public Environment(Environment<T> next) {
         symbols = new HashMap<>();
         this.next = next;
     }
 
-    public Expression lookup(String symbol) {
-        Expression result = symbols.get(symbol);
+    public T lookup(String symbol) {
+        T result = symbols.get(symbol);
         if (result != null) return result;
         if (next != null) return next.lookup(symbol);
         return null;
+    }
+
+    public void define(String name, T expr) {
+        symbols.put(name, expr);
     }
 }

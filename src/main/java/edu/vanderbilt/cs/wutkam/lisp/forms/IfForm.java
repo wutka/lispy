@@ -13,7 +13,7 @@ import edu.vanderbilt.cs.wutkam.lisp.type.ListType;
  * Date: 5/24/21
  * Time: 4:34 PM
  */
-public class IfExpander implements Form {
+public class IfForm implements Form {
     @Override
     public Expression expandForm(ListExpr aList) throws LispException {
         if (aList.elements.size() != 4) {

@@ -1,6 +1,7 @@
 package edu.vanderbilt.cs.wutkam.lisp.expr;
 
 import edu.vanderbilt.cs.wutkam.lisp.LispException;
+import edu.vanderbilt.cs.wutkam.lisp.runtime.Environment;
 import edu.vanderbilt.cs.wutkam.lisp.type.AbstractType;
 import edu.vanderbilt.cs.wutkam.lisp.type.BoolType;
 import edu.vanderbilt.cs.wutkam.lisp.type.IntType;
@@ -15,7 +16,7 @@ public class IntExpr implements Expression {
         this.value = value;
     }
 
-    public void unify(TypeRef unifyWith) throws LispException {
+    public void unify(TypeRef unifyWith, Environment<TypeRef> env) throws LispException {
         if (unifyWith.type instanceof AbstractType) {
             unifyWith.setType(IntType.TYPE);
             return;

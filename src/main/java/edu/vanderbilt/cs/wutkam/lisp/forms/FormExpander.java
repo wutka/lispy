@@ -18,7 +18,7 @@ public class FormExpander {
     public static Map<String,Form> specialForms = new HashMap<>();
 
     static {
-        specialForms.put("if", new IfExpander());
+        specialForms.put("if", new IfForm());
     }
 
     public static Expression expand(ListExpr aList) throws LispException
@@ -33,6 +33,12 @@ public class FormExpander {
             Form expander = specialForms.get(sym.value);
             if (expander != null) {
                 return expander.expandForm(aList);
+            }
+        }
+        for (int i=0; i < aList.elements.size(); i++) {
+            Expression elem = aList.elements.get(i);
+            if (elem instanceof ListExpr) {
+                aList.elements.set(i, expand((ListExpr) elem));
             }
         }
         return aList;

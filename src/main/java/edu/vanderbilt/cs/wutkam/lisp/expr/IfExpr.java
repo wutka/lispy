@@ -1,7 +1,7 @@
 package edu.vanderbilt.cs.wutkam.lisp.expr;
 
 import edu.vanderbilt.cs.wutkam.lisp.LispException;
-import edu.vanderbilt.cs.wutkam.lisp.type.AbstractType;
+import edu.vanderbilt.cs.wutkam.lisp.runtime.Environment;
 import edu.vanderbilt.cs.wutkam.lisp.type.BoolType;
 import edu.vanderbilt.cs.wutkam.lisp.type.TypeRef;
 
@@ -24,7 +24,7 @@ public class IfExpr implements Expression {
     }
 
     @Override
-    public Expression evaluate(Environment env) throws LispException {
+    public Expression evaluate(Environment<Expression> env) throws LispException {
         Expression testResult = test.evaluate(env);
         if (testResult instanceof BoolExpr) {
             if (((BoolExpr)testResult).value) {
@@ -38,22 +38,22 @@ public class IfExpr implements Expression {
     }
 
     @Override
-    public void unify(TypeRef unifyWith) throws LispException {
+    public void unify(TypeRef unifyWith, Environment<TypeRef> env) throws LispException {
         TypeRef boolRef = new TypeRef(BoolType.TYPE);
         try {
-            test.unify(boolRef);
+            test.unify(boolRef, env);
         } catch (LispException exc) {
             throw new LispException("Cannot unify test with boolean in "+toString(), exc);
         }
 
         try {
-            trueOption.unify(unifyWith);
+            trueOption.unify(unifyWith, env);
         } catch (LispException exc) {
             throw new LispException("Error unifying true path in "+toString(), exc);
         }
 
         try {
-            falseOption.unify(unifyWith);
+            falseOption.unify(unifyWith, env);
         } catch (LispException exc) {
             throw new LispException("Error unifying false path with true path in "+toString(), exc);
         }

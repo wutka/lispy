@@ -25,4 +25,7 @@ public class AbstractType extends Type {
         return tag;
     }
 
+    public boolean equals(Object other) {
+        return other instanceof AbstractType;
+    }
 }

@@ -11,6 +11,7 @@ import edu.vanderbilt.cs.wutkam.lisp.expr.Expression;
 public class TypeRef {
     public Type type;
 
+    public TypeRef() { this.type = new AbstractType(); }
     public TypeRef(Type type) {
         this.type = type;
     }

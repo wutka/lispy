@@ -1,6 +1,7 @@
 package edu.vanderbilt.cs.wutkam.lisp.expr;
 
 import edu.vanderbilt.cs.wutkam.lisp.LispException;
+import edu.vanderbilt.cs.wutkam.lisp.runtime.Environment;
 import edu.vanderbilt.cs.wutkam.lisp.type.Type;
 import edu.vanderbilt.cs.wutkam.lisp.type.TypeRef;
 
@@ -12,8 +13,8 @@ import edu.vanderbilt.cs.wutkam.lisp.type.TypeRef;
  */
 
 public interface Expression {
-    default Expression evaluate(Environment env) throws LispException {
+    default Expression evaluate(Environment<Expression> env) throws LispException {
         return this;
     }
-    void unify(TypeRef unifyWith) throws LispException;
+    void unify(TypeRef unifyWith, Environment<TypeRef> env) throws LispException;
 }
