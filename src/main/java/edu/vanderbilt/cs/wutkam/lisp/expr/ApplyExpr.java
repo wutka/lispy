@@ -4,8 +4,10 @@ import edu.vanderbilt.cs.wutkam.lisp.LispException;
 import edu.vanderbilt.cs.wutkam.lisp.runtime.Environment;
 import edu.vanderbilt.cs.wutkam.lisp.type.AbstractType;
 import edu.vanderbilt.cs.wutkam.lisp.type.FunctionType;
+import edu.vanderbilt.cs.wutkam.lisp.type.Type;
 import edu.vanderbilt.cs.wutkam.lisp.type.TypeRef;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,29 +43,85 @@ public class ApplyExpr implements Expression {
         return targetFunction.targetExpression.evaluate(funcEnv);
     }
 
+    protected List<TypeRef> typesToTypeRefs(List<Type> types) {
+        List<TypeRef> argumentTypeRefs = new ArrayList<>();
+        for (int i=0; i < types.size(); i++) {
+            Type argType = types.get(i);
+            if ((i > 0) && argType.isAbstract()) {
+                boolean found = false;
+                for (int j=0; j < i; j++) {
+                    if (types.get(j) == argType) {
+                        argumentTypeRefs.add(argumentTypeRefs.get(j));
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    argumentTypeRefs.add(new TypeRef());
+                }
+            } else {
+                argumentTypeRefs.add(new TypeRef(argType));
+            }
+        }
+        return argumentTypeRefs;
+    }
+
     @Override
     public void unify(TypeRef unifyWith, Environment<TypeRef> env) throws LispException {
-        TypeRef functionType = new TypeRef();
+        TypeRef getFunctionType = new TypeRef();
         try {
-            targetExpression.unify(functionType, env);
+            targetExpression.unify(getFunctionType, env);
         } catch (UnifyException exc) {
             throw UnifyException.addCause("Unable to unify function in function application", exc);
         }
 
-        if (!(functionType.type instanceof FunctionType)) {
-            throw new UnifyException("Unable to unify function type with "+functionType.type+" in apply");
+        if (!(getFunctionType.type instanceof FunctionType)) {
+            throw new UnifyException("Unable to unify function type with "+getFunctionType.type+" in apply");
         }
-        
-        if (targetExpression instanceof FunctionExpr) {
-            FunctionExpr targetFunction = (FunctionExpr) targetExpression;
-            if (parameters.size() + targetFunction.partialArgs.size() > targetFunction.arity) {
-                throw new UnifyException("Unable to unify function application with too many parameters");
-            } else if (parameters.size() + targetFunction.partialArgs.size() == targetFunction.arity) {
-                unifyFunctionCall(unifyWith, targetFunction, env);
-            } else {
-                FunctionExpr partialFunc = new FunctionExpr(targetFunction, parameters);
-                partialFunc.unify(unifyWith, env);
+
+        FunctionType functionType = (FunctionType) getFunctionType.type;
+
+        if (parameters.size() > functionType.arity) {
+            throw new UnifyException("Unable to apply "+parameters.size()+" arguments to a "+
+                    functionType.arity+" argument function");
+        }
+
+        List<TypeRef> argumentTypeRefs = typesToTypeRefs(functionType.argumentTypes);
+
+        if (parameters.size() < functionType.arity) {
+            for (int i=0; i < parameters.size(); i++) {
+                try {
+                    parameters.get(i).unify(argumentTypeRefs.get(i), env);
+                } catch (UnifyException exc) {
+                    throw UnifyException.addCause("Unable to unify function argument", exc);
+                }
             }
+            List<Type> partialParams = new ArrayList<>();
+            for (int i=parameters.size(); i < functionType.arity; i++) {
+                partialParams.add(argumentTypeRefs.get(i).type);
+            }
+            FunctionType partialType = new FunctionType(functionType.arity - parameters.size(),
+                    partialParams, functionType.returnType);
+
+            if (unifyWith.type.isAbstract()) {
+                unifyWith.type = partialType;
+            } else if (!(unifyWith.type instanceof FunctionType)) {
+                throw new UnifyException("Unable to unify partial function application with "+unifyWith.type);
+            } else {
+                FunctionType otherFunc = (FunctionType) unifyWith.type;
+                List<TypeRef> prefs = typesToTypeRefs(partialParams);
+                List<TypeRef> orefs = typesToTypeRefs(otherFunc.argumentTypes);
+
+                for (int i=0; i < partialType.arity; i++) {
+                    TypeRef oref = orefs.get(i);
+                    if (oref.type.isAbstract()) {
+
+                    }
+                }
+            }
+
+        } else {
+
         }
     }
 
